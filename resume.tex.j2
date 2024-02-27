@@ -1,0 +1,62 @@
+<& from "macros.j2" import style_text, control_seq, line_item -&>
+
+%% preamble
+\documentclass[<@ config.theme.font_size @>pt]{moderncv}
+\moderncvtheme[<@ config.theme.color @>]{<@ config.theme.style @>}
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage[scale=0.82]{geometry}
+\recomputelengths
+
+%% personal data
+<@ control_seq("firstname", config.personal_data.name.first) @>
+<@ control_seq("familyname", config.personal_data.name.last) @>
+<@ control_seq("title", config.personal_data.desired_title) @>
+<@ control_seq("address", config.personal_data.address.street, "{}, {} {}".format(config.personal_data.address.city, config.personal_data.address.state, config.personal_data.address.zip)) @>
+<@ control_seq("mobile", config.personal_data.mobile) @>
+<@ control_seq("email", config.personal_data.email) @>
+<&- if config.extrainfo -&>
+  <@ control_seq("extrainfo", config.extrainfo | join("\\")) @>
+<&- endif -&>
+
+\begin{document}
+\maketitle
+
+%% Work experience
+\section{Experience}
+
+<& for subsect, positions in config.experience.items() -&>
+  <@ control_seq("subsection", subsect | capitalize) @>
+  <& for position in positions -&>
+    <@ control_seq("cventry", ("{} - {}".format(position.start, position.end), "emph"), position.title, position.company, position.location, "", position.brief_description) @>
+    <& for item in position.line_items -&>
+      <@ line_item(item) @>
+    <& endfor &>
+  <& endfor &>
+<&- endfor &>
+
+%% Education
+\section{Education}
+
+<& for credential in config.education -&>
+  <@ control_seq("cventry", ("{} - {}".format(credential.start, credential.end), "emph"), credential.title, credential.institution, credential.location, "", credential.brief_description) @>
+  <& for item in credential.line_items -&>
+    <@ line_item(item) @>
+  <& endfor &>
+<&- endfor &>
+
+%% Technical Skills
+\section{Technical Skills}
+
+<& for row in config.technical_skills.categories.items()|batch(2) -&>
+  <& set pairs = [] -&>
+  <& for k, v in row -&>
+    <@ pairs.extend([style_text(("{}:".format(k), "textbf")), v|join(", ")]) or "" -@>
+  <& endfor -&>
+  <@ line_item(pairs) @>
+<& endfor -&>
+<& for item in config.technical_skills.line_items -&>
+  <@ line_item(item) @>
+<& endfor &>
+
+\end{document}
