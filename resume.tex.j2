@@ -28,7 +28,7 @@
 <& for subsect, positions in config.experience.items() -&>
   <@ control_seq("subsection", subsect | capitalize) @>
   <& for position in positions -&>
-    <@ control_seq("cventry", ("{} - {}".format(position.start, position.end), "emph"), position.title, position.company, position.location, "", position.brief_description) @>
+    <@ control_seq("cventry", ("{} -- {}".format(position.start, position.end), "emph"), position.title, position.company, position.location, "", position.brief_description) @>
     <& for item in position.line_items -&>
       <@ line_item(item) @>
     <& endfor &>
