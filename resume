@@ -1,0 +1,127 @@
+#!/bin/env python3
+
+import argparse
+import logging
+import subprocess
+import sys
+from pathlib import Path
+
+import yaml
+from addict import Addict
+from jinja2 import Environment, FileSystemLoader
+from rich.logging import RichHandler
+
+logger = logging.getLogger(__name__)
+logger.addHandler(RichHandler())
+logger.setLevel(logging.INFO)
+
+DEFAULT_CONFIG = Path(__file__).parent.joinpath("default_config.yaml")
+TEMPLATE = Path(__file__).parent.joinpath("resume.tex.j2")
+
+
+def get_resume_template():
+    jinja_env = Environment(
+        block_start_string="<&",
+        block_end_string="&>",
+        variable_start_string="<@",
+        variable_end_string="@>",
+        trim_blocks=True,
+        lstrip_blocks=True,
+        loader=FileSystemLoader(TEMPLATE.parent),
+    )
+    return jinja_env.get_template(TEMPLATE.name)
+
+
+def find_resumes(search_str):
+    return [
+        p
+        for p in TEMPLATE.parent.rglob("resume.yaml")
+        if p.parent.name.lower().startswith(search_str.lower())
+    ]
+
+
+def build_resume(path):
+    resume = path.parent.joinpath("resume.tex")
+    logger.info(
+        "Rendering %s from template %s and configuration %s",
+        resume,
+        TEMPLATE,
+        path,
+    )
+    tmpl = get_resume_template()
+    with path.open("r") as file:
+        config = Addict(yaml.unsafe_load(file))
+    resume.write_text(tmpl.render(config=config))
+    logger.info("Compiling TeX file %s using %s", resume, "pdflatex")
+    subprocess.run(
+        ["pdflatex", str(resume)],
+        cwd=path.parent,
+        stdout=subprocess.PIPE,
+        stdin=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+
+
+def get_cli_opts(args: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    commands = parser.add_subparsers(title="commands", required=True, dest="command")
+    add = commands.add_parser(
+        "add",
+        help="add subdirectories and config files for new resumes",
+    )
+    edit = commands.add_parser(
+        "edit",
+        help="edit and rebuild resume (uses $EDITOR)",
+    )
+    build = commands.add_parser(
+        "build",
+        help="build resumes from the config files",
+    )
+    add.add_argument(
+        "name",
+        help="name of resume to add",
+        nargs="+",
+    )
+    edit.add_argument("name", help="name of resume to edit")
+    build.add_argument(
+        "name",
+        help="name of resume to build (if not provided, the current directory will be built)",
+        nargs="*",
+    )
+    return parser.parse_args(args)
+
+
+if __name__ == "__main__":
+    opts = get_cli_opts(sys.argv[1:])
+    status = 0
+    logger.debug(opts)
+    if opts.command == "add":
+        for name in opts.name:
+            logger.info("Creating subdirectory and config file for resume %r", name)
+            try:
+                dest = TEMPLATE.parent.joinpath(name)
+                dest.mkdir(exist_ok=False)
+                dest.joinpath("resume.yaml").write_text(DEFAULT_CONFIG.read_text())
+            except FileExistsError:
+                logger.error("Target %r already exists!", name)
+    elif opts.command == "build":
+        for name in opts.name:
+            logger.info("Building resume %r", name)
+            try:
+                resumes = find_resumes(name)
+                if not resumes:
+                    raise FileNotFoundError(name)
+                if len(resumes) > 1:
+                    logger.warning("Resume name %r is ambiguous", name)
+                    status += 1
+                else:
+                    build_resume(resumes.pop())
+            except FileNotFoundError:
+                logger.error("Could not find resume %r", name)
+                status += 1
+            except Exception:
+                raise
+    elif opts.command == "edit":
+        raise NotImplementedError()
+
+    sys.exit(status)
