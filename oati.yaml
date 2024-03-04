@@ -1,0 +1,56 @@
+---
+start: May 2023
+end: Present
+title: Software Developer
+institution: Open Access Technology International (OATI)
+location: Bloomington, MN
+description: Full-stack enterprise software development.
+items:
+  - !cvline
+    title: Current Project
+    description: Time-series forecasting and machine-learning SaaS Web application
+    items:
+      - Requested by project leader as a team resource due to Python, Web development, and CI/CD expertise after providing mentorship and assistance in math methods, signal processing, and Python best practices to team member
+      - struct: cvlistdoubleitem
+        items:
+          - title: Backend
+            description: Python 3.8 implementations of ML-based timeseries forecasting algorithms using Keras, TensorFlow, and Scikit-Learn
+          - title: API
+            description: ASP.NET Core with Entity Framework
+          - title: Persistence
+            description:
+              - MongoDB
+              - PostgreSQL
+          - title: DevOpts
+            description:
+              - Gitlab
+              - Ansible
+              - Rundeck
+          - title: Message Queue
+            description: Kafka
+      - title: Responsibilities
+        struct: cvlistitem
+        items:
+          - Modernizing and refactoring an extensive Python 3.8 backend
+          - Driving the implementation of CI/CD and development best practices through an Agile methodology
+          - Integrating performance-testing and benchmarking methods into our review and deployment process
+  - !cvline
+    title: Previous Project
+    description: Embedded microgrid control system
+    items:
+      - struct: cvlistdoubleitem
+        items:
+          - title: Application
+            description: Java SpringBoot
+          - title: Persistence
+            description:
+              - MongoDB
+              - PostgreSQL
+              - SQL Server
+          - title: UI
+            description: Enterprise framework based on Ext.JS
+          - title: DevOps
+            description:
+              - Jenkins
+              - Pacemaker
+              - Ansible

@@ -1,0 +1,13 @@
+title: Graduate Student, Physics
+start: September 2019
+end: May 2021
+institution: Colorado State University
+location: Fort Collins, CO
+description: Completed coursework and conducted research in solid-state physics.
+items:
+  - struct: cvlistitem
+    title: Research
+    description: Computational work focusing on Ginzburg-Landau theory using finite-element libraries in Python and C++
+  - struct: cvlistitem
+    title: Teaching
+    description: TA, grading, and tutoring work for undergraduate classes in mechanics, thermodynamics, and labs

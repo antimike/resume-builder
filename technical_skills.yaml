@@ -1,0 +1,38 @@
+---
+!list_computer
+!textbf Languages:
+  - C\#
+  - Python
+  - C/C++
+  - Java
+  - SQL
+!textbf UI:
+  - React
+  - Angular
+  - Javascript/Typescript
+  - Ext.JS
+!textbf Persistence:
+  - PostgreSQL
+  - SQL Server
+  - MongoDB
+  - Kafka
+!textbf Scientific:
+  - numpy
+  - scipy
+  - SageMath
+  - deal.II (FEM library)
+!textbf Scripting:
+  - Bash
+  - zsh
+  - Lua
+  - Perl
+!textbf Server:
+  - ASP.NET Core
+  - Spring
+  - Node.JS
+!textbf Misc.:
+  - Jira
+  - Confluence
+  - Swagger
+  - GitLab
+  - TFS

@@ -1,0 +1,14 @@
+start: March 2018
+end: September 2019
+title: Associate Consultant
+institution: Magenic Technologies
+location: St. Louis Park, MN
+description: Full-stack Web development focused on ASP.NET, SQL Server, and Angular.
+items:
+  - struct: cvline
+    title: Project
+    description: Cloud-based client onboarding webapp and dashboard built with .NET Core, Entity Framework, SQL Server, Angular 6, and Azure DevOps.
+    items:
+      - Built a provisioning pipeline for cloud-based client resources using Azure DevOps
+      - Spearheaded effort to implement role-based user authentication
+      - Delivered significant work across the full tech stack, including database migrations and stored procedures, .NET microservices, and UI feature development
