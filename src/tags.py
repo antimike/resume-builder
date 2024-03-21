@@ -53,7 +53,7 @@ ResumeLoader.add_multi_constructor("!tex-", _process_latex)
 ResumeLoader.add_multi_constructor("!items-", _process_list_tag)
 
 
-def include(node: yaml.Node, loader: yaml.Loader):
+def include(loader: yaml.Loader, node: yaml.Node):
     content = loader.construct_scalar(node)
     try:
         with next(loader.find_configs(content)).open("r") as file:

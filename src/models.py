@@ -5,9 +5,22 @@ from typing import ClassVar
 
 import yaml
 
+from .loaders import ResumeLoader
 
-@dataclass(kw_only=True)
-class ResumeConfig(yaml.YAMLObject):
+
+def resume_model(cls):
+    decorated = dataclass(kw_only=True)(cls)
+
+    def constructor(loader: yaml.Loader, node: yaml.Node):
+        content = loader.construct_mapping(node)
+        return decorated(**content)
+
+    ResumeLoader.add_constructor(cls.yaml_tag, constructor)
+    return decorated
+
+
+@resume_model
+class ResumeConfig:
     yaml_tag: ClassVar[str] = "!resume-config"
 
     items: list[dict | ResumeConfig] = field(default_factory=list)
@@ -16,7 +29,7 @@ class ResumeConfig(yaml.YAMLObject):
         return fmt % asdict(self)
 
 
-@dataclass(kw_only=True)
+@resume_model
 class ResumeTheme(ResumeConfig):
     yaml_tag: ClassVar[str] = "!theme"
 
@@ -25,7 +38,7 @@ class ResumeTheme(ResumeConfig):
     font_size: int = 10
 
 
-@dataclass(kw_only=True)
+@resume_model
 class Address(ResumeConfig):
     yaml_tag: ClassVar[str] = "!address"
 
@@ -35,7 +48,7 @@ class Address(ResumeConfig):
     zip: str
 
 
-@dataclass(kw_only=True)
+@resume_model
 class PersonalData(ResumeConfig):
     yaml_tag: ClassVar[str] = "!personal-data"
 
@@ -47,7 +60,7 @@ class PersonalData(ResumeConfig):
     email: str
 
 
-@dataclass(kw_only=True)
+@resume_model
 class Position(ResumeConfig):
     yaml_tag: ClassVar[str] = "!position"
 
