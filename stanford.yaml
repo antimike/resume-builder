@@ -1,12 +1,14 @@
-title: B.S. in Physics, concentration in Theory
+---
+!position
 start: September 2009
 end: June 2016
-institution: Stanford University
+title: B.S. in Physics, concentration in Theory
+company: Stanford University
 location: Stanford, CA
-items:
-  - title: Coursework
+items: !items-single
+  - title: !bf Coursework
     description: Datastructures and algorithms (C/C++); numerical work in Matlab, Python, R, and Mathematica for physics labs; extensive math background, including analysis, differential equations, differential geometry, and topology
-  - title: Theory
+  - title: !bf Theory
     description:
       - analysis
       - differential equations
@@ -16,5 +18,5 @@ items:
       - representation theory
       - differential geometry
       - particle physics
-  - title: Honors
+  - title: !bf Honors
     description: William Lowell Putnam Mathematical Competition Top 100, 2010

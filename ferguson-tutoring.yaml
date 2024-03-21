@@ -1,11 +1,11 @@
 ---
+!position
 start: 2012
 end: 2019
 title: Private Tutor
-institution: Ferguson Tutoring
+company: Ferguson Tutoring
 location: Minnetonka, MN
 description: Science and mathematics tutor specializing in one-on-one sessions with university and advanced high school students.
----
-struct: cvlistitem
-title: Subjects
-description: Math, computer science, and physics (all levels); biology and chemistry (through university freshman level)
+items: !items-line
+  - title: Subjects
+    description: Math, computer science, and physics (all levels); biology and chemistry (through university freshman level)

@@ -1,36 +1,43 @@
 ---
-!list_computer
-!textbf Languages:
+!items-computer
+- title: !bf Languages
+  description:
   - C\#
   - Python
   - C/C++
   - Java
   - SQL
-!textbf UI:
+- title: !bf UI
+  description:
   - React
   - Angular
   - Javascript/Typescript
   - Ext.JS
-!textbf Persistence:
+- title: !bf Persistence
+  description:
   - PostgreSQL
   - SQL Server
   - MongoDB
   - Kafka
-!textbf Scientific:
+- title: !bf Scientific
+  description:
   - numpy
   - scipy
   - SageMath
   - deal.II (FEM library)
-!textbf Scripting:
+- title: !bf Scripting
+  description:
   - Bash
   - zsh
   - Lua
   - Perl
-!textbf Server:
+- title: !bf Server
+  description:
   - ASP.NET Core
   - Spring
   - Node.JS
-!textbf Misc.:
+- title: !bf Misc.
+  description:
   - Jira
   - Confluence
   - Swagger
