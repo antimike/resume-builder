@@ -1,4 +1,4 @@
-<& from "macros.j2" import style_text, control_seq, line_item -&>
+<& from "macros.j2" import style_text, control_seq, line_item, print_line_items -&>
 
 %% preamble
 \documentclass[<@ config.theme.font_size @>pt]{moderncv}
@@ -9,33 +9,31 @@
 \recomputelengths
 
 %% personal data
-<@ control_seq("firstname", config.personal_data.name.first) @>
-<@ control_seq("familyname", config.personal_data.name.last) @>
+<@ control_seq("firstname", config.personal_data.first_name) @>
+<@ control_seq("familyname", config.personal_data.last_name) @>
 <@ control_seq("title", config.personal_data.desired_title) @>
-<@ control_seq("address", config.personal_data.address.street, "{}, {} {}".format(config.personal_data.address.city, config.personal_data.address.state, config.personal_data.address.zip)) @>
+<@ control_seq("address", config.personal_data.address.format("{city}, {state} {zip}") @>
 <@ control_seq("mobile", config.personal_data.mobile) @>
 <@ control_seq("email", config.personal_data.email) @>
-<&- if config.extrainfo -&>
-  <@ control_seq("extrainfo", config.extrainfo | join("\\")) @>
-<&- endif -&>
+<@ control_seq("extrainfo", config.personal_data.items | join(" \\ ")) @>
 
 \begin{document}
 \maketitle
 
-%% Work experience
+<& for section in data.sections -&>
+  <@ control_seq("section", section.title) @>
+<& endfor -&>
+
 \section{Experience}
 
 <& for subsect, positions in config.experience.items() -&>
   <@ control_seq("subsection", subsect | capitalize) @>
   <& for position in positions -&>
     <@ control_seq("cventry", ("{} -- {}".format(position.start, position.end), "emph"), position.title, position.company, position.location, "", position.brief_description) @>
-    <& for item in position.line_items -&>
-      <@ line_item(item) @>
-    <& endfor &>
+    <@ print_line_items(position.line_items) @>
   <& endfor &>
 <&- endfor &>
 
-%% Education
 \section{Education}
 
 <& for credential in config.education -&>
@@ -45,7 +43,6 @@
   <& endfor &>
 <&- endfor &>
 
-%% Technical Skills
 \section{Technical Skills}
 
 <& for row in config.technical_skills.categories.items()|batch(2) -&>

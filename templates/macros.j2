@@ -1,0 +1,98 @@
+<& macro style_text(text) -&>
+  <&- if text is string -&>
+    <@ text @>
+  <&- elif text is iterable -&>
+    <@ "\%s{%s}" % (text[1], text[0]) @>
+  <&- endif -&>
+<&- endmacro -&>
+
+<& macro control_seq(name) -&>
+  \<@ name @><& for text in varargs &>{<@ style_text(text) @>}<& endfor &>
+<&- endmacro &>
+
+<& macro line_item(
+    item,
+    parent_item="cvline",
+    child_item="line_item",
+    defn="cvlistitem",
+    str="cvlistitem",
+    key_style="textbf"
+  ) -&>
+  <&- if item is string -&>
+    <@ control_seq("cvlistitem", item) @>
+  <&- elif item is mapping -&>
+    <& if "children" in item -&>
+    <& endif -&>
+    <&- for key, value in item.items() -&>
+      <@ control_seq("cvline", key, value) @>
+    <&- endfor -&>
+  <&- elif item is iterable -&>
+    <&- if (item|count) == 2 -&>
+      <@ control_seq("cvlistdoubleitem", *item) @>
+    <&- elif (item|count) == 4 -&>
+      <@ control_seq("cvcomputer", *item) @>
+    <&- endif -&>
+  <&- endif -&>
+<&- endmacro -&>
+
+<& macro key_value_pair(key, value, struct="cvlistitem", key_style="textbf", value_style=none) -&>
+  <& if struct == "cvlistitem" -&>
+    <@ control_seq("cvlistitem", [style_text("{}:".format(key), key_style), style_text(value, value_style)] | join(" ")) @>
+  <& elif struct == "cvline" -&>
+    <@ control_seq("cvline", (key, key_style), (value, value_style)) @>
+  <& endif -&>
+<& endmacro -&>
+
+<& macro process_mapping(m) -&>
+  <& set header_struct = m.get("header_struct", "cvline") -&>
+  <& set header_style = m.get("header_style", "textbf") -&>
+  <& set item_struct = m.get("item_struct", "cvlistitem") -&>
+  <& set item_style = m.get("item_style", none) -&>
+  <& set key_style = m.get("key_style", "textbf") -&>
+  <& for name, section in m.get("sections", {}).items() -&>
+    <@ key_value_pair(name, section.get("description", ""), struct=header_struct, key_style=header_style) @>
+    <@ process_mapping(section) @>
+  <& endfor -&>
+
+  <& if item_struct == "cvcomputer" -&>
+    <# assume that items is a mapping #>
+    <& 
+  <& elif item_struct == "cvlistdoubleitem" -&>
+  <& else -&>
+  <& endif -&>
+
+  <& for item in m.get("items", []) -&>
+    <& if item is string -&>
+      
+    <& elif item is mapping -&>
+    <& endif -&>
+  <& endfor -&>
+<& endmacro -&>
+
+<& macro print_line_items(obj) -&>
+  <& if obj is mapping -&>
+    <& set items = obj.get("items", []) -&>
+    <& for item in items -&>
+      ...
+    <& endfor -&>
+  <& endif -&>
+
+  <& if items is mapping -&>
+    <& for key, value in items.items() -&>
+      <& if value is string -&>
+        <@ key_value_pair(key, value, key_style=key_style) @>
+      <& elif value is iterable -&>
+        <& if key is string -&>
+          <@ key_value_pair(key, "", key_style=key_style) @>
+        <& elif key is iterable -&>
+          <@ key_value_pair(*key, key_style=key_style) @>
+        <& endif -&>
+        <@ print_line_items(value, key_style=key_style) @>
+      <& endif -&>
+    <&- endfor &>
+  <& elif items is iterable -&>
+    <& for item in items -&>
+      <@ line_item(item) @>
+    <& endfor -&>
+  <& endif -&>
+<& endmacro -&>
