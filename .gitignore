@@ -4,3 +4,5 @@
 *.pdf
 test*
 .mise.toml
+__pycache__
+.jukit
