@@ -69,5 +69,5 @@ class Position(ResumeConfig):
     title: str
     company: str
     location: str
-    description: str
+    description: str = None
     items: list[str] = field(default_factory=list)
