@@ -1,13 +1,9 @@
-import inspect
-from functools import reduce
 from itertools import chain
 from pathlib import Path
-from typing import Mapping, Sequence
 
 import yaml
 
-from . import DEFAULT_CONFIG, TEMPLATE, get_logger
-from .utils import batch
+from . import DEFAULT_CONFIG, get_logger
 
 logger = get_logger(__name__)
 
