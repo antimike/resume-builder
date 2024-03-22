@@ -4,8 +4,11 @@ from pathlib import Path
 import jinja2
 from rich.logging import RichHandler
 
-DEFAULT_CONFIG = Path(__file__).parent.parent.joinpath("default_config.yaml")
-TEMPLATE = Path(__file__).parent.parent.joinpath("resume.tex.j2")
+PROJECT_ROOT = Path(__file__).parent.parent
+TEMPLATES = PROJECT_ROOT.joinpath("templates")
+DATA = PROJECT_ROOT.joinpath("data")
+APPLICATIONS = PROJECT_ROOT.joinpath("applications")
+DEFAULT_CONFIG = DATA.joinpath("default_config.yaml")
 
 JINJA_ENV = jinja2.Environment(
     block_start_string="<&",
@@ -16,7 +19,7 @@ JINJA_ENV = jinja2.Environment(
     comment_end_string="#>",
     trim_blocks=True,
     lstrip_blocks=True,
-    loader=jinja2.FileSystemLoader(TEMPLATE.parent),
+    loader=jinja2.FileSystemLoader(TEMPLATES),
     extensions=["jinja2.ext.do"],
 )
 
