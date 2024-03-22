@@ -1,8 +1,11 @@
 import argparse
 import sys
 
-from . import DEFAULT_CONFIG, TEMPLATE, get_logger
+from . import APPLICATIONS, DEFAULT_CONFIG, get_logger
+from .tags import add_resume_tags
 from .utils import build_resume, find_resumes
+
+add_resume_tags()
 
 logger = get_logger(__name__)
 
@@ -44,7 +47,7 @@ def run_cli(args: list[str]):
         for name in opts.name:
             logger.info("Creating subdirectory and config file for resume %r", name)
             try:
-                dest = TEMPLATE.parent.joinpath(name)
+                dest = APPLICATIONS.joinpath(name)
                 dest.mkdir(exist_ok=False)
                 dest.joinpath("resume.yaml").write_text(DEFAULT_CONFIG.read_text())
             except FileExistsError:
