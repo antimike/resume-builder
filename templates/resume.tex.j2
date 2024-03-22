@@ -20,40 +20,19 @@
 \begin{document}
 \maketitle
 
-<& for section in data.sections -&>
-  <@ control_seq("section", section.title) @>
+<& for section in config.sections -&>
+  <& if section.items is defined -&>
+    <@ control_seq("section", section.title) @>
+    <& if section.format_as is defined -&>
+      <& for item in section.items -&>
+        <@ format_as(section.items, section.format_as) @>
+      <& endfor -&>
+    <& else -&>
+      <& for item in section.items -&>
+        <@ item @>
+      <& endfor -&>
+    <& endfor -&>
+  <& endif -&>
 <& endfor -&>
-
-\section{Experience}
-
-<& for subsect, positions in config.experience.items() -&>
-  <@ control_seq("subsection", subsect | capitalize) @>
-  <& for position in positions -&>
-    <@ control_seq("cventry", ("{} -- {}".format(position.start, position.end), "emph"), position.title, position.company, position.location, "", position.brief_description) @>
-    <@ print_line_items(position.line_items) @>
-  <& endfor &>
-<&- endfor &>
-
-\section{Education}
-
-<& for credential in config.education -&>
-  <@ control_seq("cventry", ("{} - {}".format(credential.start, credential.end), "emph"), credential.title, credential.institution, credential.location, "", credential.brief_description) @>
-  <& for item in credential.line_items -&>
-    <@ line_item(item) @>
-  <& endfor &>
-<&- endfor &>
-
-\section{Technical Skills}
-
-<& for row in config.technical_skills.categories.items()|batch(2) -&>
-  <& set pairs = [] -&>
-  <& for k, v in row -&>
-    <@ pairs.extend([style_text(("{}:".format(k), "textbf")), v|join(", ")]) or "" -@>
-  <& endfor -&>
-  <@ line_item(pairs) @>
-<& endfor -&>
-<& for item in config.technical_skills.line_items -&>
-  <@ line_item(item) @>
-<& endfor &>
 
 \end{document}
