@@ -10,6 +10,11 @@ DATA = PROJECT_ROOT.joinpath("data")
 APPLICATIONS = PROJECT_ROOT.joinpath("applications")
 DEFAULT_CONFIG = DATA.joinpath("default_config.yaml")
 
+template_loader = jinja2.loaders.ChoiceLoader(
+    [jinja2.loaders.FileSystemLoader(TEMPLATES)]
+)
+config_loader = jinja2.loaders.ChoiceLoader([jinja2.loaders.FileSystemLoader(DATA)])
+
 JINJA_ENV = jinja2.Environment(
     block_start_string="<&",
     block_end_string="&>",
@@ -19,7 +24,7 @@ JINJA_ENV = jinja2.Environment(
     comment_end_string="#>",
     trim_blocks=True,
     lstrip_blocks=True,
-    loader=jinja2.FileSystemLoader(TEMPLATES),
+    loader=template_loader,
     extensions=["jinja2.ext.do"],
 )
 
