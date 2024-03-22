@@ -3,6 +3,7 @@ from typing import Sequence
 
 import yaml
 
+from .listitems import add_list_tags
 from .loaders import ResumeLoader
 
 _resume_prefix = "!resume-"
@@ -48,10 +49,6 @@ for tag in ("bf", "textbf", "bold"):
 for tag in ("it", "italic", "italics", "emph"):
     add_style_tag(tag, r"\emph{%s}")
 
-ResumeLoader.add_multi_constructor(_resume_prefix, _process_resume_tag)
-ResumeLoader.add_multi_constructor("!tex-", _process_latex)
-ResumeLoader.add_multi_constructor("!items-", _process_list_tag)
-
 
 def include(loader: yaml.Loader, node: yaml.Node):
     content = loader.construct_scalar(node)
@@ -68,4 +65,9 @@ def include(loader: yaml.Loader, node: yaml.Node):
         raise KeyError(f"No config file for resume item {content!r} was found")
 
 
-ResumeLoader.add_constructor("!include", include)
+def add_resume_tags():
+    ResumeLoader.add_multi_constructor(_resume_prefix, _process_resume_tag)
+    ResumeLoader.add_multi_constructor("!tex-", _process_latex)
+    ResumeLoader.add_multi_constructor("!items-", _process_list_tag)
+    ResumeLoader.add_constructor("!include", include)
+    add_list_tags()

@@ -127,17 +127,11 @@ class ResumeDoubleListItemProcessor(ResumeListProcessor):
     BATCH_SIZE: ClassVar[int] = 2
 
 
-add_list_tag("double", ResumeDoubleListItemProcessor.process_sequence)
-
-
 class ResumeComputerListItemProcessor(ResumeListProcessor):
     ARGS_KV: ClassVar[list[tuple[str]]] = [("%(title)s", "%(description)s")]
     ARGS_SCALAR: ClassVar[tuple[str]] = (None, "%s")
     LATEX_MACRO: ClassVar[str] = "cvcomputer"
     BATCH_SIZE: ClassVar[int] = 2
-
-
-add_list_tag("computer", ResumeComputerListItemProcessor.process_sequence)
 
 
 class ResumeLineListItemProcessor(ResumeListProcessor):
@@ -150,4 +144,7 @@ class ResumeLineListItemProcessor(ResumeListProcessor):
     BATCH_SIZE: ClassVar[int] = 1
 
 
-add_list_tag("line", ResumeLineListItemProcessor.process_sequence)
+def add_list_tags():
+    add_list_tag("double", ResumeDoubleListItemProcessor.process_sequence)
+    add_list_tag("computer", ResumeComputerListItemProcessor.process_sequence)
+    add_list_tag("line", ResumeLineListItemProcessor.process_sequence)
