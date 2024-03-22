@@ -8,12 +8,14 @@ personal_data: !include personal_data
 
 sections:
   - title: experience
+    format_as: position
     items:
       - !include oati
       - !include magenic
       - !include ferguson-tutoring
 
   - title: education
+    format_as: education
     items:
       - !include stanford
       - !include csu
