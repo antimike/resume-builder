@@ -12,26 +12,26 @@
 <@ control_seq("firstname", config.personal_data.first_name) @>
 <@ control_seq("familyname", config.personal_data.last_name) @>
 <@ control_seq("title", config.personal_data.desired_title) @>
-<@ control_seq("address", config.personal_data.address.format("{city}, {state} {zip}") @>
+<@ control_seq("address", config.personal_data.address.format("%(street)s"), config.personal_data.address.format("%(city)s, %(state)s %(zip)s")) @>
 <@ control_seq("mobile", config.personal_data.mobile) @>
 <@ control_seq("email", config.personal_data.email) @>
-<@ control_seq("extrainfo", config.personal_data.items | join(" \\ ")) @>
+<@ control_seq("extrainfo", config.personal_data.items | join(" \\\\ ")) @>
 
 \begin{document}
 \maketitle
 
 <& for section in config.sections -&>
-  <& if section.items is defined -&>
-    <@ control_seq("section", section.title) @>
+  <& if "items" in section -&>
+    <@ control_seq("section", section.title.capitalize()) @>
     <& if section.format_as is defined -&>
-      <& for item in section.items -&>
-        <@ format_as(section.items, section.format_as) @>
+      <& for item in section["items"] -&>
+        <@ format_as(item, section.format_as) @>
       <& endfor -&>
     <& else -&>
-      <& for item in section.items -&>
+      <& for item in section["items"] -&>
         <@ item @>
       <& endfor -&>
-    <& endfor -&>
+    <& endif -&>
   <& endif -&>
 <& endfor -&>
 

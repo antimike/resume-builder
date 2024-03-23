@@ -7,7 +7,7 @@ company: Magenic Technologies
 location: St. Louis Park, MN
 description: Full-stack Web development focused on ASP.NET, SQL Server, and Angular.
 items: !items-line
-  - title: Project
+  - title: !bf Project
     description: Cloud-based client onboarding webapp and dashboard built with .NET Core, Entity Framework, SQL Server, Angular 6, and Azure DevOps.
     items: !items-single
       - Built a provisioning pipeline for cloud-based client resources using Azure DevOps

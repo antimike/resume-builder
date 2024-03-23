@@ -7,5 +7,5 @@ company: Ferguson Tutoring
 location: Minnetonka, MN
 description: Science and mathematics tutor specializing in one-on-one sessions with university and advanced high school students.
 items: !items-line
-  - title: Subjects
+  - title: !bf Subjects
     description: Math, computer science, and physics (all levels); biology and chemistry (through university freshman level)

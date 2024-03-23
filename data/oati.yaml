@@ -7,44 +7,44 @@ company: Open Access Technology International (OATI)
 location: Bloomington, MN
 description: Full-stack enterprise software development.
 items: !items-line
-  - title: Current Project
+  - title: !bf Current Project
     description: Time-series forecasting and machine-learning SaaS Web application
     items: !items-single
       - Requested by project leader as a team resource due to Python, Web development, and CI/CD expertise after providing mentorship and assistance in math methods, signal processing, and Python best practices to team member
       - items: !items-double
-        - title: !bf Backend
+        - title: !it Backend
           description: Python 3.8 implementations of ML-based timeseries forecasting algorithms using Keras, TensorFlow, and Scikit-Learn
-        - title: !bf API
+        - title: !it API
           description: ASP.NET Core with Entity Framework
-        - title: !bf Persistence
+        - title: !it Persistence
           description:
             - MongoDB
             - PostgreSQL
-        - title: !bf DevOps
+        - title: !it DevOps
           description:
             - Gitlab
             - Ansible
             - Rundeck
-        - title: !bf Message Queue
+        - title: !it Message Queue
           description: Kafka
       - title: !bf Responsibilities
         items: !items-single
           - Modernizing and refactoring an extensive Python 3.8 backend
           - Driving the implementation of CI/CD and development best practices through an Agile methodology
           - Integrating performance-testing and benchmarking methods into our review and deployment process
-  - title: Previous Project
+  - title: !bf Previous Project
     description: Embedded microgrid control system
     items: !items-double
-      - title: !bf Application
+      - title: !it Application
         description: Java SpringBoot
-      - title: !bf Persistence
+      - title: !it Persistence
         description:
           - MongoDB
           - PostgreSQL
           - SQL Server
-      - title: !bf UI
+      - title: !it UI
         description: Enterprise framework based on Ext.JS
-      - title: !bf DevOps
+      - title: !it DevOps
         description:
           - Jenkins
           - Pacemaker

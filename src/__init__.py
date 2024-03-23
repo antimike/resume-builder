@@ -11,9 +11,11 @@ APPLICATIONS = PROJECT_ROOT.joinpath("applications")
 DEFAULT_CONFIG = DATA.joinpath("default_config.yaml")
 
 template_loader = jinja2.loaders.ChoiceLoader(
-    [jinja2.loaders.FileSystemLoader(TEMPLATES)]
+    [jinja2.loaders.FileSystemLoader(d) for d in (".", TEMPLATES)]
 )
-config_loader = jinja2.loaders.ChoiceLoader([jinja2.loaders.FileSystemLoader(DATA)])
+config_loader = jinja2.loaders.ChoiceLoader(
+    [jinja2.loaders.FileSystemLoader(d) for d in (".", DATA)]
+)
 
 JINJA_ENV = jinja2.Environment(
     block_start_string="<&",
@@ -29,9 +31,12 @@ JINJA_ENV = jinja2.Environment(
 )
 
 
-def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
+def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     handler = RichHandler()
     logger.addHandler(handler)
-    logger.setLevel(level)
     return logger
+
+
+def set_log_level(level):
+    logging.getLogger().setLevel(level)

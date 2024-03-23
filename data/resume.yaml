@@ -21,5 +21,4 @@ sections:
       - !include csu
 
   - title: technical skills
-    items:
-      - !include technical_skills
+    items: !include technical_skills

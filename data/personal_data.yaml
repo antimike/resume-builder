@@ -3,7 +3,7 @@
 first_name: Michael
 last_name: Haynes
 desired_title: Data Engineer
-address: !include test-address.yaml
+address: !include address.yaml
 mobile: (952)426-8758
 email: antihaynes@gmail.com
 items:

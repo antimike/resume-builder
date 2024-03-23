@@ -25,8 +25,16 @@ class ResumeConfig:
 
     items: list[dict | ResumeConfig] = field(default_factory=list)
 
-    def format(self, fmt: str) -> str:
-        return fmt % asdict(self)
+    def format(self, fmt: str, style="%") -> str:
+        if style == "%":
+            return fmt % asdict(self)
+        elif style == "{}":
+            return fmt.format(**asdict(self))
+        else:
+            raise ValueError(f"Unknown format {style!r}")
+
+    def to_dict(self):
+        return asdict(self)
 
 
 @resume_model
