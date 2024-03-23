@@ -3,7 +3,7 @@ from typing import Sequence
 
 import yaml
 
-from .loaders import ResumeLoader
+from .utils import get_config
 
 _resume_prefix = "!resume-"
 _resume_tags = {}
@@ -22,7 +22,7 @@ def add_list_tag(tag_suffix, func):
     _list_tags[tag_suffix] = func
 
 
-def add_style_tag(tag, template, Loader=ResumeLoader):
+def add_style_tag(tag, template, Loader=yaml.SafeLoader):
     Loader.add_constructor(
         f"!{tag.removeprefix('!')}",
         lambda loader, node: template % loader.construct_scalar(node),
@@ -50,25 +50,17 @@ for tag in ("it", "italic", "italics", "emph"):
 
 
 def include(loader: yaml.Loader, node: yaml.Node):
-    content = loader.construct_scalar(node)
-    try:
-        with next(loader.find_configs(content)).open("r") as file:
-            docs = list(yaml.load_all(file, loader.__class__))
-            if len(docs) == 1:
-                return docs[0]
-            elif all(isinstance(doc, Sequence) for doc in docs):
-                return reduce(lambda res, doc: res + list(doc), docs, [])
-            else:
-                return docs
-    except StopIteration:
-        raise KeyError(f"No config file for resume item {content!r} was found")
+    name = loader.construct_scalar(node)
+    content, _, _ = get_config(name)
+    return yaml.load(content, loader.__class__)
 
 
 def add_resume_tags():
     from .listitems import add_list_tags
 
-    ResumeLoader.add_multi_constructor(_resume_prefix, _process_resume_tag)
-    ResumeLoader.add_multi_constructor("!tex-", _process_latex)
-    ResumeLoader.add_multi_constructor("!items-", _process_list_tag)
-    ResumeLoader.add_constructor("!include", include)
+    yaml.SafeLoader.add_multi_constructor(_resume_prefix, _process_resume_tag)
+    yaml.SafeLoader.add_multi_constructor("!tex-", _process_latex)
+    yaml.SafeLoader.add_multi_constructor("!items-", _process_list_tag)
+    yaml.SafeLoader.add_constructor("!include", include)
+
     add_list_tags()

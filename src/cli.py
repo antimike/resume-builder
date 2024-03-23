@@ -6,7 +6,6 @@ from pathlib import Path
 import yaml
 
 from . import APPLICATIONS, PROJECT_ROOT, get_logger, set_log_level
-from .loaders import ResumeLoader
 from .tags import add_resume_tags
 from .utils import (build_pdflatex, display_pdf, edit_file, find_resumes,
                     get_config, get_template, render_to_file)
@@ -89,7 +88,7 @@ def _create_texfile(
     template = get_template(template_name)
     config_yaml, _, _ = get_config(config_name)
     logger.debug("Using template %s", template)
-    config = yaml.load(config_yaml, ResumeLoader)
+    config = yaml.load(config_yaml, yaml.SafeLoader)
     logger.debug("Using resume config %s", config)
     dest = Path(dest)
     if dest.exists():
@@ -142,7 +141,7 @@ def run_cli(args: list[str]):
                     logger.info("Build successful")
                 else:
                     logger.error("Build failed with error code %s", result.returncode)
-                    print(result.stdout.decode())
+                    logger.debug(result.stdout.decode())
             elif opts.command == "view":
                 pdf = RESUME_BASE.with_suffix(".pdf")
                 logger.info(

@@ -9,7 +9,6 @@ import yaml
 from jinja2 import TemplateError, TemplateNotFound
 
 from . import APPLICATIONS, JINJA_ENV, config_loader, get_logger
-from .loaders import ResumeLoader
 
 logger = get_logger(__name__)
 

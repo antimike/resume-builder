@@ -8,7 +8,6 @@ PROJECT_ROOT = Path(__file__).parent.parent
 TEMPLATES = PROJECT_ROOT.joinpath("templates")
 DATA = PROJECT_ROOT.joinpath("data")
 APPLICATIONS = PROJECT_ROOT.joinpath("applications")
-DEFAULT_CONFIG = DATA.joinpath("default_config.yaml")
 
 template_loader = jinja2.loaders.ChoiceLoader(
     [jinja2.loaders.FileSystemLoader(d) for d in (".", TEMPLATES)]

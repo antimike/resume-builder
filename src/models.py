@@ -5,8 +5,6 @@ from typing import ClassVar
 
 import yaml
 
-from .loaders import ResumeLoader
-
 
 def resume_model(cls):
     decorated = dataclass(kw_only=True)(cls)
@@ -15,7 +13,7 @@ def resume_model(cls):
         content = loader.construct_mapping(node)
         return decorated(**content)
 
-    ResumeLoader.add_constructor(cls.yaml_tag, constructor)
+    yaml.SafeLoader.add_constructor(cls.yaml_tag, constructor)
     return decorated
 
 
