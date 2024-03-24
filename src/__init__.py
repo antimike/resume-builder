@@ -37,5 +37,15 @@ def get_logger(name: str) -> logging.Logger:
     return logger
 
 
-def set_log_level(level):
+def set_log_level(level: str | int):
     logging.getLogger().setLevel(level)
+
+
+def set_verbosity(level: int):
+    levels = ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+    if level < 0:
+        set_log_level(logging.CRITICAL + 1)
+    elif level >= len(levels):
+        set_log_level(logging.DEBUG - 1)
+    else:
+        set_log_level(levels[level])
