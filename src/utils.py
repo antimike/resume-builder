@@ -75,7 +75,7 @@ def find_resumes(search_str):
 
 
 def edit_file(file):
-    logger.info("Editing file %s")
+    logger.info("Editing file %s", file)
     subprocess.run([EDITOR, "--", str(file)])
 
 
