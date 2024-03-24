@@ -65,12 +65,14 @@ def get_cli_opts(args: list[str]) -> argparse.Namespace:
         "-c",
         help="edit a configuration file",
         action="append",
+        default=[],
     )
     edit.add_argument(
         "--template",
         "-t",
         help="edit a template file",
         action="append",
+        default=[],
     )
     edit.add_argument("name", help="resume or application identifier", action="append")
     build.add_argument(
@@ -126,7 +128,8 @@ def _locate_working_dir(search_term, fuzzy=True):
 def _localize_file(path: Path | str) -> Path:
     path = Path(path).absolute()
     pwd = Path.cwd()
-    if not pwd < path:
+    logger.debug("Localizing path %s to working dir %s", path, pwd)
+    if pwd not in path.parents:
         logger.info("Localizing file %s to working dir", path)
         copyfile(path, pwd.joinpath(path.name))
         path = pwd.joinpath(path.name)
@@ -138,7 +141,7 @@ def run_cli(args: list[str]):
 
     opts = get_cli_opts(args)
 
-    set_verbosity(opts.verbosity)
+    set_verbosity(opts.verbose)
     if opts.debug:
         set_log_level("DEBUG")
 
@@ -149,7 +152,6 @@ def run_cli(args: list[str]):
             path = _locate_working_dir(name, fuzzy=(not opts.command == "add"))
             logger.debug("Working dir: %s", path)
             _cd_to_application_dir(path)
-            _create_texfile(RESUME_BASE.with_suffix(".tex"))
             if opts.command == "add" and getattr(opts, "from", None) is not None:
                 raise NotImplementedError()
             if opts.command == "edit":
@@ -160,10 +162,11 @@ def run_cli(args: list[str]):
                 for template in opts.template:
                     doc_path = get_template(template).filename
                     doc_paths.append(_localize_file(doc_path))
+                logger.debug(doc_paths)
                 for doc_path in doc_paths:
-                    logger.info("Editing file %s", doc_path)
                     edit_file(doc_path)
             elif opts.command == "build":
+                _create_texfile(RESUME_BASE.with_suffix(".tex"))
                 logger.info("Building resume %r...", name)
                 result = build_pdflatex(RESUME_BASE.with_suffix(".tex"))
                 if result.returncode == 0:
