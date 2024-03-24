@@ -2,10 +2,12 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from shutil import copyfile
 
 import yaml
 
-from . import APPLICATIONS, PROJECT_ROOT, get_logger, set_log_level
+from . import (APPLICATIONS, PROJECT_ROOT, get_logger, set_log_level,
+               set_verbosity)
 from .tags import add_resume_tags
 from .utils import (build_pdflatex, display_pdf, edit_file, find_resumes,
                     get_config, get_template, render_to_file)
@@ -27,6 +29,13 @@ def get_cli_opts(args: list[str]) -> argparse.Namespace:
         help="print debug output",
         action="store_true",
     )
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        help="increase verbosity",
+        action="count",
+        default=0,
+    )
     commands = parser.add_subparsers(title="commands", required=True, dest="command")
     add = commands.add_parser(
         "add",
@@ -46,22 +55,22 @@ def get_cli_opts(args: list[str]) -> argparse.Namespace:
         help="name of resume to add",
         nargs="+",
     )
-    doctypes = edit.add_mutually_exclusive_group(required=True)
-    doctypes.add_argument(
-        "-c",
-        "--config",
-        help="edit a configuration file",
-        dest="doctype",
-        action="store_const",
-        const="config",
+    add.add_argument(
+        "--from",
+        "-f",
+        help="source to copy config and template files from",
     )
-    doctypes.add_argument(
-        "-t",
+    edit.add_argument(
+        "--config",
+        "-c",
+        help="edit a configuration file",
+        action="append",
+    )
+    edit.add_argument(
         "--template",
+        "-t",
         help="edit a template file",
-        dest="doctype",
-        action="store_const",
-        const="template",
+        action="append",
     )
     edit.add_argument("name", help="resume or application identifier", action="append")
     build.add_argument(
@@ -114,10 +123,22 @@ def _locate_working_dir(search_term, fuzzy=True):
         return APPLICATIONS.joinpath(search_term)
 
 
+def _localize_file(path: Path | str) -> Path:
+    path = Path(path).absolute()
+    pwd = Path.cwd()
+    if not pwd < path:
+        logger.info("Localizing file %s to working dir", path)
+        copyfile(path, pwd.joinpath(path.name))
+        path = pwd.joinpath(path.name)
+    return path
+
+
 def run_cli(args: list[str]):
     add_resume_tags()
 
     opts = get_cli_opts(args)
+
+    set_verbosity(opts.verbosity)
     if opts.debug:
         set_log_level("DEBUG")
 
@@ -129,11 +150,19 @@ def run_cli(args: list[str]):
             logger.debug("Working dir: %s", path)
             _cd_to_application_dir(path)
             _create_texfile(RESUME_BASE.with_suffix(".tex"))
-            if opts.command == "edit":
+            if opts.command == "add" and getattr(opts, "from", None) is not None:
                 raise NotImplementedError()
-                # if opts.doctype == "config":
-                #     logger.info("Editing source file %s", name)
-                # edit_file(SOURCE_FILENAME)
+            if opts.command == "edit":
+                doc_paths = []
+                for config in opts.config:
+                    _, doc_path, _ = get_config(config)
+                    doc_paths.append(_localize_file(doc_path))
+                for template in opts.template:
+                    doc_path = get_template(template).filename
+                    doc_paths.append(_localize_file(doc_path))
+                for doc_path in doc_paths:
+                    logger.info("Editing file %s", doc_path)
+                    edit_file(doc_path)
             elif opts.command == "build":
                 logger.info("Building resume %r...", name)
                 result = build_pdflatex(RESUME_BASE.with_suffix(".tex"))
@@ -142,6 +171,7 @@ def run_cli(args: list[str]):
                 else:
                     logger.error("Build failed with error code %s", result.returncode)
                     logger.debug(result.stdout.decode())
+                    status += result.returncode
             elif opts.command == "view":
                 pdf = RESUME_BASE.with_suffix(".pdf")
                 logger.info(
