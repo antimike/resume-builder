@@ -6,3 +6,4 @@ test*
 .mise.toml
 __pycache__
 .jukit
+applications/foo
